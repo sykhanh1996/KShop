@@ -13,3 +13,8 @@ Seeding Data
 6, Install Serilog.Sinks.Console
 7, Install Serilog.Extensions.Hosting
 8, Install Serilog.Settings.Configuration
+Create ResfulApi
+9, Install Automapper
+10,Install AutoMapper.Extensions.Microsoft.Dependency
+Add Swagger
+11, Swashbuckle.AspNetCore

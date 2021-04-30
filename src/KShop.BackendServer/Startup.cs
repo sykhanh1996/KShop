@@ -12,8 +12,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using KShop.BackendServer.Data;
 using KShop.BackendServer.Data.Entities;
+using KShop.BackendServer.Services.Functions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 namespace KShop.BackendServer
 {
@@ -52,7 +54,42 @@ namespace KShop.BackendServer
                 options.Password.RequireUppercase = true;
                 options.User.RequireUniqueEmail = true;
             });
+
+            services.AddAutoMapper(typeof(Startup));
             services.AddTransient<KShopDBInitializer>();
+
+            //services
+            //    .AddMvc(options =>
+            //    {
+            //        options.Filters.Add(typeof(AppInitializerFilter));
+            //    });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "KShop API", Version = "v1" });
+                //c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                //{
+                //    Type = SecuritySchemeType.OAuth2,
+                //    Flows = new OpenApiOAuthFlows
+                //    {
+                //        Implicit = new OpenApiOAuthFlow
+                //        {
+                //            AuthorizationUrl = new Uri("https://localhost:5000/connect/authorize"),
+                //            Scopes = new Dictionary<string, string> { { "api.kshop", "kshop API" } }
+                //        },
+                //    },
+                //});
+                //c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                //{
+                //    {
+                //        new OpenApiSecurityScheme
+                //        {
+                //            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                //        },
+                //        new List<string>{ "api.kshop" }
+                //    }
+                //});
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +109,17 @@ namespace KShop.BackendServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                //c.OAuthClientId("swagger");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "KShop API V1");
             });
         }
     }
