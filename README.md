@@ -17,4 +17,8 @@ Create ResfulApi
 9, Install Automapper
 10,Install AutoMapper.Extensions.Microsoft.Dependency
 Add Swagger
-11, Swashbuckle.AspNetCore
+11, Install Swashbuckle.AspNetCore
+Add FluentValidation Model
+12, Install FluentValidation.AspNetCore
+Add IdentityServer4
+13,Install IdentityServer4.AspNetIdentity
