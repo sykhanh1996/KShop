@@ -5,8 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using KShop.BackendServer.Authorization;
+using KShop.BackendServer.Constants;
 using KShop.BackendServer.Data;
 using KShop.BackendServer.Data.Entities;
+using KShop.BackendServer.Helpers;
 using KShop.ViewModels;
 using KShop.ViewModels.Systems;
 using Microsoft.AspNetCore.Identity;
@@ -30,8 +33,8 @@ namespace KShop.BackendServer.Controllers
         }
 
         [HttpPost]
-        //[ClaimRequirement(FunctionCode.SYSTEM_ROLE, CommandCode.CREATE)]
-        //[ApiValidationFilter]
+        [ClaimRequirement(FunctionCode.SYSTEM_ROLE, CommandCode.CREATE)]
+        [ApiValidationFilter]
         public async Task<IActionResult> PostRole(RoleCreateRequest request)
         {
             var role = _mapper.Map<AppRole>(request);
@@ -41,12 +44,11 @@ namespace KShop.BackendServer.Controllers
                 return CreatedAtAction(nameof(GetById), new { id = role.Id }, request);
             }
 
-            //return BadRequest(new ApiBadRequestResponse(result));
-            return BadRequest();
+            return BadRequest(new ApiBadRequestResponse(result));
         }
 
         [HttpGet]
-        //[ClaimRequirement(FunctionCode.SYSTEM_ROLE, CommandCode.VIEW)]
+        [ClaimRequirement(FunctionCode.SYSTEM_ROLE, CommandCode.VIEW)]
         public async Task<IActionResult> GetRoles()
         {
             var roles = _roleManager.Roles;
@@ -55,7 +57,7 @@ namespace KShop.BackendServer.Controllers
         }
 
         [HttpGet("filter")]
-        //[ClaimRequirement(FunctionCode.SYSTEM_ROLE, CommandCode.VIEW)]
+        [ClaimRequirement(FunctionCode.SYSTEM_ROLE, CommandCode.VIEW)]
         public async Task<IActionResult> GetRolesPaging(string filter, int pageIndex, int pageSize)
         {
             var query = _roleManager.Roles;
@@ -78,31 +80,29 @@ namespace KShop.BackendServer.Controllers
         }
 
         [HttpGet("{id}")]
-        //[ClaimRequirement(FunctionCode.SYSTEM_ROLE, CommandCode.VIEW)]
+        [ClaimRequirement(FunctionCode.SYSTEM_ROLE, CommandCode.VIEW)]
         public async Task<IActionResult> GetById(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
             if (role == null)
-                //return NotFound(new ApiNotFoundResponse(_localizer["FindRoleErr"] + id));
-                return NotFound();
+                return NotFound(new ApiNotFoundResponse("Cannot find role with ID: " + id));
 
             var roleVm = _mapper.Map<RoleVm>(role);
             return Ok(roleVm);
         }
 
         [HttpPut("{id}")]
-        //[ClaimRequirement(FunctionCode.SYSTEM_ROLE, CommandCode.UPDATE)]
-        //[ApiValidationFilter]
+        [ClaimRequirement(FunctionCode.SYSTEM_ROLE, CommandCode.UPDATE)]
+        [ApiValidationFilter]
         public async Task<IActionResult> PutRole(string id, [FromBody] RoleCreateRequest roleVm)
         {
             if (id != roleVm.Id)
-                //return BadRequest(new ApiBadRequestResponse(_localizer["RoleNotMatch"]));
-                return BadRequest();
+                return BadRequest(new ApiBadRequestResponse("Role ID not match"));
+          
 
             var role = await _roleManager.FindByIdAsync(id);
             if (role == null)
-                //return NotFound(new ApiNotFoundResponse(_localizer["FindRoleErr"] + id));
-                return NotFound();
+                return NotFound(new ApiNotFoundResponse("Cannot find role with ID: " + id));
 
             role.Name = roleVm.Name;
             role.NormalizedName = roleVm.Name.ToUpper();
@@ -113,18 +113,16 @@ namespace KShop.BackendServer.Controllers
             {
                 return NoContent();
             }
-            //return BadRequest(new ApiBadRequestResponse(result));
-            return BadRequest();
+            return BadRequest(new ApiBadRequestResponse(result));
         }
 
         [HttpDelete("{id}")]
-        //[ClaimRequirement(FunctionCode.SYSTEM_ROLE, CommandCode.DELETE)]
+        [ClaimRequirement(FunctionCode.SYSTEM_ROLE, CommandCode.DELETE)]
         public async Task<IActionResult> DeleteRole(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
             if (role == null)
-                //return NotFound(new ApiNotFoundResponse(_localizer["FindRoleErr"] + id));
-                return NotFound();
+                return NotFound(new ApiNotFoundResponse("Cannot find role with ID: " + id));
 
             var result = await _roleManager.DeleteAsync(role);
 
@@ -133,12 +131,11 @@ namespace KShop.BackendServer.Controllers
                 var rolevm = _mapper.Map<RoleVm>(role);
                 return Ok(rolevm);
             }
-            //return BadRequest(new ApiBadRequestResponse(result));
-            return BadRequest();
+            return BadRequest(new ApiBadRequestResponse(result));
         }
 
         [HttpGet("{roleId}/permissions")]
-        //[ClaimRequirement(FunctionCode.SYSTEM_PERMISSION, CommandCode.VIEW)]
+        [ClaimRequirement(FunctionCode.SYSTEM_PERMISSION, CommandCode.VIEW)]
         public async Task<IActionResult> GetPermissionByRoleId(string roleId)
         {
             var permissions = from p in _context.Permissions
@@ -157,8 +154,8 @@ namespace KShop.BackendServer.Controllers
         }
 
         [HttpPut("{roleId}/permissions")]
-        //[ClaimRequirement(FunctionCode.SYSTEM_PERMISSION, CommandCode.VIEW)]
-        //[ApiValidationFilter]
+        [ClaimRequirement(FunctionCode.SYSTEM_PERMISSION, CommandCode.VIEW)]
+        [ApiValidationFilter]
         public async Task<IActionResult> PutPermissionByRoleId(string roleId, [FromBody] UpdatePermissionRequest request)
         {
             //create new permission list from user changed
@@ -176,9 +173,8 @@ namespace KShop.BackendServer.Controllers
             {
                 return NoContent();
             }
-
-            //return BadRequest(new ApiBadRequestResponse(_localizer["SavePerrmissionErr"]));
-            return BadRequest();
+            return BadRequest(new ApiBadRequestResponse("Save permission failed"));
+           
         }
     }
     internal class MyPermissionComparer : IEqualityComparer<Permission>

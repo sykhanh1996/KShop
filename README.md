@@ -24,3 +24,11 @@ Add IdentityServer4
 13,Install IdentityServer4.AspNetIdentity
 Using Dapper for Permission
 14, Install Dapper
+Add Claim for Identity
+15, Create IdentityProfileService.cs
+Add Serilog
+16, Install Serilog.AspNetCore
+17, Install Serilog.Settings.Configuration
+18, Install Serilog.Sinks.Async
+19, Install Serilog.Sinks.Console
+20, Install Serilog.Sinks.File

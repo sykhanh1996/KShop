@@ -5,9 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using KShop.BackendServer.Authorization;
 using KShop.BackendServer.Constants;
 using KShop.BackendServer.Data;
 using KShop.BackendServer.Data.Entities;
+using KShop.BackendServer.Helpers;
 using KShop.ViewModels;
 using KShop.ViewModels.Systems;
 using Microsoft.EntityFrameworkCore;
@@ -31,8 +33,8 @@ namespace KShop.BackendServer.Controllers
             _mapper = mapper;
         }
         [HttpPost]
-        //[ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.CREATE)]
-        //[ApiValidationFilter]
+        [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.CREATE)]
+        [ApiValidationFilter]
         public async Task<IActionResult> PostFunction([FromBody] FunctionCreateRequest request)
         {
             _logger.LogInformation("Begin PostFunction API");
@@ -69,7 +71,7 @@ namespace KShop.BackendServer.Controllers
         }
 
         [HttpGet]
-        //[ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.VIEW)]
+        [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.VIEW)]
         public async Task<IActionResult> GetFunctions()
         {
             var functions = _context.Functions;
@@ -80,7 +82,7 @@ namespace KShop.BackendServer.Controllers
         }
 
         [HttpGet("{functionId}/parents")]
-        //[ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.VIEW)]
+        [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.VIEW)]
         public async Task<IActionResult> GetFunctionsByParentId(string functionId)
         {
             var functions = _context.Functions.Where(x => x.ParentId == functionId);
@@ -91,7 +93,7 @@ namespace KShop.BackendServer.Controllers
         }
 
         [HttpGet("filter")]
-        //[ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.VIEW)]
+        [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.VIEW)]
         public async Task<IActionResult> GetFunctionsPaging(string filter, int pageIndex, int pageSize)
         {
             var query = _context.Functions.AsQueryable();
@@ -128,8 +130,8 @@ namespace KShop.BackendServer.Controllers
         }
 
         [HttpPut("{id}")]
-        //[ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.UPDATE)]
-        //[ApiValidationFilter]
+        [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.UPDATE)]
+        [ApiValidationFilter]
         public async Task<IActionResult> PutFunction(string id, [FromBody] FunctionCreateRequest request)
         {
             var function = await _context.Functions.FindAsync(id);
@@ -155,7 +157,7 @@ namespace KShop.BackendServer.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.DELETE)]
+        [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.DELETE)]
         public async Task<IActionResult> DeleteFunction(string id)
         {
             var function = await _context.Functions.FindAsync(id);
@@ -180,7 +182,7 @@ namespace KShop.BackendServer.Controllers
             return BadRequest();
         }
         [HttpGet("{functionId}/commands")]
-        //[ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.VIEW)]
+        [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.VIEW)]
         public async Task<IActionResult> GetCommandsInFunction(string functionId)
         {
             var query = from a in _context.Commands
@@ -206,8 +208,8 @@ namespace KShop.BackendServer.Controllers
             return Ok(data);
         }
         [HttpPost("{functionId}/commands")]
-        //[ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.CREATE)]
-        //[ApiValidationFilter]
+        [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.CREATE)]
+        [ApiValidationFilter]
         public async Task<IActionResult> PostCommandToFunction(string functionId, [FromBody] CommandAssignRequest request)
         {
             foreach (var commandId in request.CommandIds)
@@ -254,7 +256,7 @@ namespace KShop.BackendServer.Controllers
             return BadRequest();
         }
         [HttpDelete("{functionId}/commands")]
-        //[ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.UPDATE)]
+        [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.UPDATE)]
         public async Task<IActionResult> DeleteCommandToFunction(string functionId, [FromQuery] CommandAssignRequest request)
         {
             foreach (var commandId in request.CommandIds)

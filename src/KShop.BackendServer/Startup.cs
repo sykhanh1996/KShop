@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
 using KShop.BackendServer.Data;
 using KShop.BackendServer.Data.Entities;
+using KShop.BackendServer.Extensions;
 using KShop.BackendServer.IdentityServer;
 using KShop.BackendServer.Services.Functions;
 using KShop.BackendServer.Services.Interfaces;
@@ -55,7 +56,7 @@ namespace KShop.BackendServer
                 .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
                 .AddInMemoryIdentityResources(Config.Ids)
                 .AddAspNetIdentity<AppUser>()
-                //.AddProfileService<IdentityProfileService>()
+                .AddProfileService<IdentityProfileService>()
                 .AddDeveloperSigningCredential();
 
             services.Configure<IdentityOptions>(options =>
@@ -108,12 +109,17 @@ namespace KShop.BackendServer
             services.AddTransient<KShopDBInitializer>();
             services.AddTransient<IEmailSender, EmailSenderService>();
             services.AddTransient<ISequenceService, SequenceService>();
+            services.AddTransient<IStorageService, FileStorageService>();
             //services
             //    .AddMvc(options =>
             //    {
             //        options.Filters.Add(typeof(AppInitializerFilter));
             //    });
 
+            services.Configure<ApiBehaviorOptions>(otps =>
+            {
+                otps.SuppressModelStateInvalidFilter = true;
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "KShop API", Version = "v1" });
@@ -149,6 +155,8 @@ namespace KShop.BackendServer
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseErrorWrapping();
+
             app.UseIdentityServer();
 
             app.UseAuthentication();
