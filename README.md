@@ -22,3 +22,5 @@ Add FluentValidation Model
 12, Install FluentValidation.AspNetCore
 Add IdentityServer4
 13,Install IdentityServer4.AspNetIdentity
+Using Dapper for Permission
+14, Install Dapper

@@ -183,7 +183,7 @@ namespace KShop.BackendServer.Controllers
                         select new FunctionVm
                         {
                             Id = f.Id,
-                            NameTemp = f.Name,
+                            Name = f.Name,
                             Url = f.Url,
                             ParentId = f.ParentId,
                             SortOrder = f.SortOrder,

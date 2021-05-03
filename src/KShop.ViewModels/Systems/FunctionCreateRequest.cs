@@ -4,7 +4,7 @@ using System.Text;
 
 namespace KShop.ViewModels.Systems
 {
-    public class FunctionVm
+    public class FunctionCreateRequest
     {
         public string Id { get; set; }
 

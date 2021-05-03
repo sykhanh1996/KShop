@@ -15,6 +15,7 @@ using KShop.BackendServer.Data;
 using KShop.BackendServer.Data.Entities;
 using KShop.BackendServer.IdentityServer;
 using KShop.BackendServer.Services.Functions;
+using KShop.BackendServer.Services.Interfaces;
 using KShop.ViewModels.Systems;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -106,6 +107,7 @@ namespace KShop.BackendServer
 
             services.AddTransient<KShopDBInitializer>();
             services.AddTransient<IEmailSender, EmailSenderService>();
+            services.AddTransient<ISequenceService, SequenceService>();
             //services
             //    .AddMvc(options =>
             //    {
