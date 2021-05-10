@@ -11,46 +11,10 @@ const routes: Routes = [
       import("./views/pages/auth/auth.module").then((m) => m.AuthModule),
   },
   {
-    path: "2",
-    component: BaseComponent,
+    path: "",
     canActivate: [AuthGuard],
     loadChildren: () =>
     import("./views/views.module").then((m) => m.ViewsModule),
-  },
-  {
-    path: "",
-    component: BaseComponent,
-    canActivate: [AuthGuard],
-    children: [
-      {
-        path: "dashboard",
-        loadChildren: () =>
-          import("./views/pages/dashboard/dashboard.module").then(
-            (m) => m.DashboardModule
-          ),
-      },
-      {
-        path: "tables",
-        loadChildren: () =>
-          import("./views/pages/tables/tables.module").then(
-            (m) => m.TablesModule
-          ),
-      },
-      {
-        path: "icons",
-        loadChildren: () =>
-          import("./views/pages/icons/icons.module").then((m) => m.IconsModule),
-      },
-      {
-        path: "general",
-        loadChildren: () =>
-          import("./views/pages/general/general.module").then(
-            (m) => m.GeneralModule
-          ),
-      },
-      { path: "", redirectTo: "dashboard", pathMatch: "full" },
-      // { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
-    ],
   },
   {
     path: "error",

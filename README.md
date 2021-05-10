@@ -32,3 +32,6 @@ Add Serilog
 18, Install Serilog.Sinks.Async
 19, Install Serilog.Sinks.Console
 20, Install Serilog.Sinks.File
+
+Angular
+21, Install oidc-client --- npm install oidc-client@1.9.1 --save
