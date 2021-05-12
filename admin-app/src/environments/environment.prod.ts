@@ -1,5 +1,5 @@
 export const environment = {
-  production: true,
+  production: false,
   apiUrl: 'https://kapi.com.vn',
   authorityUrl: 'https://kapi.com.vn',
   clientId: 'angular_admin',

@@ -62,7 +62,7 @@ export function getClientSettings(): UserManagerSettings {
     return {
         authority: environment.authorityUrl,
         client_id: environment.clientId,
-        redirect_uri: environment.adminUrl + "/auth-callback",
+        redirect_uri: environment.adminUrl + "/error",
         post_logout_redirect_uri: environment.adminUrl,
         response_type: "code",
         scope: "api.kshop openid profile",

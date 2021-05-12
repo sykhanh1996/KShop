@@ -11,6 +11,8 @@ import { AppComponent } from './app.component';
 import { ErrorPageComponent } from './views/pages/error-page/error-page.component';
 
 import { HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,7 @@ import { HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
   providers: [
     AuthGuard,
     {
-      provide: HIGHLIGHT_OPTIONS, // https://www.npmjs.com/package/ngx-highlightjs
+      provide: [HIGHLIGHT_OPTIONS,HTTP_INTERCEPTORS], // https://www.npmjs.com/package/ngx-highlightjs
       useValue: {
         coreLibraryLoader: () => import('highlight.js/lib/core'),
         languages: {
@@ -34,7 +36,9 @@ import { HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
           typescript: () => import('highlight.js/lib/languages/typescript'),
           scss: () => import('highlight.js/lib/languages/scss'),
         }
-      }
+      },
+      useClass: AuthInterceptor,
+      multi: true
     }
   ],
   bootstrap: [AppComponent]

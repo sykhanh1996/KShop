@@ -23,56 +23,56 @@ export class ErrorPageComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     // check for error
-    // if (this.route.snapshot.queryParams.error) {
-    //   this.error = true;
-    //   return;
-    // }
+    if (this.route.snapshot.queryParams.error) {
+      this.error = true;
+      
+      this.type = this.route.snapshot.paramMap.get("type");
+      this.sub = this.route.data.subscribe((param) => {
+        if (param.type) {
+          this.type = param.type;
+        }
+        if (param.title) {
+          this.title = param.title;
+        }
+        if (param.desc) {
+          this.desc = param.desc;
+        }
+      });
 
-    // await this.authService.completeAuthentication();
-    // this.router.navigate(["/"]);
-
-    this.type = this.route.snapshot.paramMap.get("type");
-    this.sub = this.route.data.subscribe((param) => {
-      if (param.type) {
-        this.type = param.type;
+      switch (this.type) {
+        case "404":
+          if (!this.title) {
+            this.title = "Page Not Found";
+          }
+          if (!this.desc) {
+            this.desc = "Oopps!! The page you were looking for doesn't exist.";
+          }
+          break;
+        case "500":
+          if (!this.title) {
+            this.title = "Internal server error";
+          }
+          if (!this.desc) {
+            this.desc = "Oopps!! There wan an error. Please try agin later.";
+          }
+          break;
+        default:
+          // if (!this.type) {
+          this.type = "Ooops..";
+          // }
+          if (!this.title) {
+            this.title = "Something went wrong";
+          }
+          if (!this.desc) {
+            this.desc =
+              "Looks like something went wrong.<br>" + "We're working on it";
+          }
       }
-      if (param.title) {
-        this.title = param.title;
-      }
-      if (param.desc) {
-        this.desc = param.desc;
-      }
-    });
-
-    switch (this.type) {
-      case "404":
-        if (!this.title) {
-          this.title = "Page Not Found";
-        }
-        if (!this.desc) {
-          this.desc = "Oopps!! The page you were looking for doesn't exist.";
-        }
-        break;
-      case "500":
-        if (!this.title) {
-          this.title = "Internal server error";
-        }
-        if (!this.desc) {
-          this.desc = "Oopps!! There wan an error. Please try agin later.";
-        }
-        break;
-      default:
-        // if (!this.type) {
-        this.type = "Ooops..";
-        // }
-        if (!this.title) {
-          this.title = "Something went wrong";
-        }
-        if (!this.desc) {
-          this.desc =
-            "Looks like something went wrong.<br>" + "We're working on it";
-        }
+      return;
     }
+
+    await this.authService.completeAuthentication();
+    this.router.navigate(["/"]);
   }
 
   ngOnDestroy(): void {
